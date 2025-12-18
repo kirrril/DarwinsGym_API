@@ -35,8 +35,8 @@ jobs:
       run: ./vendor/bin/phpunit --coverage-clover coverage.xml tests/
 
     - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@v2
+      uses: SonarSource/sonarcloud-github-action@master
       with:
-        args: >
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-          -Dsonar.php.coverage.reportPaths=coverage.xml
+        projectKey: kirrril_DarwinsGym_API
+        organization: kirrril
+        token: 686da240945df51c7df18c0554b69642d7ba4742
