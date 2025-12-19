@@ -26,14 +26,14 @@ function getEmailVerificationStatus(mysqli $mysqli, string $username): ?bool
 function statusToJson(?bool $status): array
 {
     if ($status === true) {
-        return (['status' => 'verified']);
+        return ['status' => 'verified'];
     }
     else if ($status === false)
     {
-        return (['status' => 'pending']);
+        return ['status' => 'pending'];
     }
     else
     {
-        return (['status' => 'error']);
+        return ['status' => 'error'];
     }
 }
