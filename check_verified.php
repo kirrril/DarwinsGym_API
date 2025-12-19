@@ -10,6 +10,9 @@ $username = $_GET['username'] ?? null;
 if (validateUsername($username)) {
     $status = getEmailVerificationStatus($mysqli, $username);
 }
-else $status = null;
+else
+{
+    $status = null;
+}
 
 echo json_encode(statusToJson($status));
