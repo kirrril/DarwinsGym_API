@@ -81,10 +81,10 @@ function getPlayerRank(mysqli $mysqli, ?int $player_score): ?int
 function rankToJson(?int $rank): array
 {
     if ($rank > 0) {
-        return (['status' => 'success', 'rank' => $rank]);
+        return ['status' => 'success', 'rank' => $rank];
     }
     else
     {
-        return (['status' => 'error']);
+        return ['status' => 'error'];
     }
 }
