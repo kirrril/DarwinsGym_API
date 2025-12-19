@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-class GetRankUnitTests extends TestCase
+class GetRankUnitTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {

@@ -2,7 +2,7 @@
 declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
-class CheckVerifiedUnitTests extends TestCase
+class CheckVerifiedUnitTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
