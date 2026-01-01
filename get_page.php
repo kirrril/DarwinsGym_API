@@ -8,13 +8,7 @@ $limit = 10;
 $offset = $page * $limit;
 $order = $desc ? 'DESC' : 'ASC';
 
-$page_stmt = $mysqli->prepare("
-    SELECT players.player_name, scores.score, scores.score_updated_at
-    FROM scores
-    JOIN players ON scores.player_id = players.id
-    ORDER BY scores.score $order, scores.score_updated_at DESC
-    LIMIT ? OFFSET ?
-");
+$page_stmt = $mysqli->prepare("SELECT player_name, score, score_updated_at FROM players ORDER BY score $order, score_updated_at $order LIMIT ? OFFSET ?");
 $page_stmt->bind_param("ii", $limit, $offset);
 $page_stmt->execute();
 $page_result = $page_stmt->get_result();

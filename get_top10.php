@@ -2,15 +2,7 @@
 header("Content-Type: application/json");
 require_once 'config.php';
 
-$stmt = $mysqli->prepare("
-    SELECT players.player_name, scores.score, scores.score_updated_at
-    FROM scores
-    JOIN players ON scores.player_id = players.id
-    WHERE YEAR(score_updated_at) = YEAR(CURDATE())
-    AND MONTH(score_updated_at) = MONTH(CURDATE())
-    ORDER BY scores.score DESC, scores.score_updated_at DESC
-    LIMIT 10
-");
+$stmt = $mysqli->prepare("SELECT player_name, score, score_updated_at FROM scores WHERE YEAR(score_updated_at) = YEAR(CURDATE()) AND MONTH(score_updated_at) = MONTH(CURDATE()) ORDER BY score DESC, score_updated_at DESC LIMIT 10");
 $stmt->execute();
 $result = $stmt->get_result();
 

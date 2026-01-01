@@ -8,7 +8,10 @@ class GetRankIntegrationTest extends TestCase
 {
     public function testUsernameAndTokenMissingReturnsError(): void
     {
-        $_GET = [];
+        $GLOBALS['__TEST_INPUT__'] = json_encode([
+            'player_name' => '',
+            'token' => ''
+        ]);
         require __DIR__ . '/../config.php';
         ob_start();
         require __DIR__ . '/../get_rank.php';
@@ -22,7 +25,10 @@ class GetRankIntegrationTest extends TestCase
 
     public function testTokenMissingReturnsError(): void
     {
-        $_GET = ['player_name' => 'Balzac'];
+        $GLOBALS['__TEST_INPUT__'] = json_encode([
+            'player_name' => 'Monet',
+            'token' => ''
+        ]);
         require __DIR__ . '/../config.php';
         ob_start();
         require __DIR__ . '/../get_rank.php';
@@ -36,7 +42,10 @@ class GetRankIntegrationTest extends TestCase
 
     public function testNameMissingReturnsError(): void
     {
-        $_GET = ['token' => 'balzac123'];
+        $GLOBALS['__TEST_INPUT__'] = json_encode([
+            'player_name' => '',
+            'token' => '7082d2290ec59fa0cb50f7088819af45e0b92a006837a51a44d94a0a8b40a48d'
+        ]);
         require __DIR__ . '/../config.php';
         ob_start();
         require __DIR__ . '/../get_rank.php';
@@ -50,7 +59,10 @@ class GetRankIntegrationTest extends TestCase
 
     public function testNameAndTokenOKReturnsRank(): void
     {
-        $_GET = ['player_name' => 'Balzac', 'token' => 'balzac123'];
+        $GLOBALS['__TEST_INPUT__'] = json_encode([
+            'player_name' => 'Cezanne',
+            'token' => '7082d2290ec59fa0cb50f7088819af45e0b92a006837a51a44d94a0a8b40a48d'
+        ]);
         require __DIR__ . '/../config.php';
         ob_start();
         require __DIR__ . '/../get_rank.php';
@@ -62,14 +74,17 @@ class GetRankIntegrationTest extends TestCase
         );
 
         $this->assertEquals(
-            "3",
+            "2",
             $output->rank
         );
     }
 
     public function testFalseTokenReturnsError(): void
     {
-        $_GET = ['player_name' => 'Balzac', 'token' => 'balzac321'];
+        $GLOBALS['__TEST_INPUT__'] = json_encode([
+            'player_name' => 'Renoir',
+            'token' => '7082d2290ec59fa0cb50f7088819af45e0b92a006837a51a44d94a0a8b40a48d'
+        ]);
         require __DIR__ . '/../config.php';
         ob_start();
         require __DIR__ . '/../get_rank.php';
@@ -83,7 +98,10 @@ class GetRankIntegrationTest extends TestCase
 
     public function testExpiredSessionReturnsError(): void
     {
-        $_GET = ['player_name' => 'Hugo', 'token' => 'hugo123'];
+        $GLOBALS['__TEST_INPUT__'] = json_encode([
+            'player_name' => 'Manet',
+            'token' => '553ef68b01013ad24a47824ee8bb5c2ec803448f9b36337e8ed8b8ad78897638'
+        ]);
         require __DIR__ . '/../config.php';
         ob_start();
         require __DIR__ . '/../get_rank.php';

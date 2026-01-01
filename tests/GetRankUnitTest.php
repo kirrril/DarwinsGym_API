@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
@@ -19,51 +20,26 @@ class GetRankUnitTest extends TestCase
         $this->assertTrue(validateNameAndToken("name", "dqsf4g6df5g"));
     }
 
-    public function testGetPlayerId()
+    public function testGetScoreData()
     {
         $mysqli = require __DIR__ . '/../config.php';
-        $this->assertEquals(1, getPlayerId($mysqli, "Balzac"));
-        $this->assertNotEquals(20, getPlayerId($mysqli, "Hugo"));
-        $this->assertEquals(null, getPlayerId($mysqli, "Maupassant"));
-        $this->assertEquals(null, getPlayerId($mysqli, null));
+        $this->assertEquals(null, getScoreData($mysqli, "Pissaro", null));
+        $this->assertEquals(null, getScoreData($mysqli, null, "9e79d1337348d2343e3763b6bdd506bc61bb0ef7787c9d99d1880b75ba675329"));
+        $this->assertEquals(['score' => '141', 'score_updated_at' => '2025-11-12 09:11:48'], getScoreData($mysqli, "Pissarro", "9e79d1337348d2343e3763b6bdd506bc61bb0ef7787c9d99d1880b75ba675329"));
     }
 
-    public function testCheckTokenGetId()
+    public function testGetRank()
     {
         $mysqli = require __DIR__ . '/../config.php';
-        $this->assertEquals(1, checkTokenGetId($mysqli, "balzac123"));
-        $this->assertEquals(null, getPlayerId($mysqli, "balzac321"));
-        $this->assertNotEquals(20, getPlayerId($mysqli, "hugo123"));
-        $this->assertEquals(null, getPlayerId($mysqli, "hugo123"));
-        $this->assertEquals(null, getPlayerId($mysqli, "maupassant123"));
-        $this->assertEquals(null, checkTokenGetId($mysqli, null));
-        $this->assertEquals(2, checkTokenGetId($mysqli, "flaubert123"));
+        $this->assertEquals(1, getRank($mysqli, ['score' => '141', 'score_updated_at' => '2025-11-12 09:11:48']));
+        $this->assertEquals(3, getRank($mysqli, ['score' => '85', 'score_updated_at' => '2025-11-01 07:55:03']));
+        $this->assertNotEquals(1, getRank($mysqli, ['score' => '85', 'score_updated_at' => '2025-11-01 07:55:03']));
     }
 
-    public function testCheckPlayer()
+    public function testRankToJson()
     {
-        $this->assertFalse(checkPlayer(22, "balzac123"));
-        $this->assertNull(checkPlayer(22, null));
-        $this->assertFalse(checkPlayer(123, "123"));
-        $this->assertTrue(checkPlayer(1, 1));
-        $this->assertTrue(checkPlayer(6548412116546848, 6548412116546848));
-    }
-
-    public function testGetPlayerScore()
-    {
-        $mysqli = require __DIR__ . '/../config.php';
-        $this->assertEquals(10, getPlayerScore($mysqli, 1));
-        $this->assertNotEquals(10, getPlayerScore($mysqli, 2));
-        $this->assertNull(getPlayerScore($mysqli, null));
-        $this->assertNull(getPlayerScore($mysqli, 4));
-        $this->assertEquals(30, getPlayerScore($mysqli, 3));
-    }
-
-    public function testGetPlayerRank()
-    {
-        $mysqli = require __DIR__ . '/../config.php';
-        $this->assertNull(getPlayerRank($mysqli, null));
-        $this->assertEquals(4, getPlayerRank($mysqli, 1));
-        $this->assertEquals(1, getPlayerRank($mysqli, 99));
+        $this->assertEquals(['status' => 'success', 'rank' => 26], rankToJson(26));
+        $this->assertEquals(['status' => 'error'], rankToJson(null));
+        $this->assertEquals(['status' => 'error'], rankToJson(-2));
     }
 }

@@ -20,7 +20,8 @@ function getEmailVerificationStatus(mysqli $mysqli, string $username): ?bool
         return null;
     }
 
-    return (bool) $row['email_verified'];
+    $email_status = $row['email_verified']; // Ici string 0 ou 1
+    return (bool)$email_status; // Conversion en bool
 }
 
 function statusToJson(?bool $status): array

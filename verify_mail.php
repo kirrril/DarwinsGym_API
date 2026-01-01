@@ -7,7 +7,7 @@ if (empty($token)) {
     exit;
 }
 
-$stmt = $mysqli->prepare("UPDATE players SET email_verified = 1, verification_token = NULL WHERE verification_token = ? LIMIT 1");
+$stmt = $mysqli->prepare("UPDATE players SET email_verified = 1, verif_token = NULL WHERE verif_token = ? AND email_verified = 0 LIMIT 1");
 $stmt->bind_param("s", $token);
 $stmt->execute();
 

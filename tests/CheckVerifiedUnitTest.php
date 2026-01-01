@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 use PHPUnit\Framework\TestCase;
 
 class CheckVerifiedUnitTest extends TestCase
@@ -11,47 +13,24 @@ class CheckVerifiedUnitTest extends TestCase
 
     public function testValidateUsername(): void
     {
-        // require_once __DIR__ . '/../check_verified_functions.php';
-
         $this->assertFalse(validateUsername(null));
         $this->assertFalse(validateUsername(''));
-        $this->assertTrue(validateUsername('Balzac'));
-    }
-
-    public function testStatusToJson(): void
-    {
-        // require_once __DIR__ . '/../check_verified_functions.php';
-
-        $this->assertEquals(
-            "verified",
-            statusToJson(true)['status']
-        );
-
-        $this->assertEquals(
-            "pending",
-            statusToJson(false)['status']
-        );
-
-        $this->assertEquals(
-            "error",
-            statusToJson(null)['status']
-        );
+        $this->assertTrue(validateUsername('Pissarro'));
     }
 
     public function testGetEmailVerificationStatus(): void
     {
         require __DIR__ . '/../config.php';
 
-        $this->assertTrue(
-            getEmailVerificationStatus($mysqli, 'Balzac')
-        );
+        $this->assertTrue(getEmailVerificationStatus($mysqli, 'Monet'));
+        $this->assertFalse(getEmailVerificationStatus($mysqli, 'Manet'));
+        $this->assertNull(getEmailVerificationStatus($mysqli, 'Sisley'));
+    }
 
-        $this->assertFalse(
-            getEmailVerificationStatus($mysqli, 'Hugo')
-        );
-
-        $this->assertNull(
-            getEmailVerificationStatus($mysqli, 'Dumas')
-        );
+    public function testStatusToJson(): void
+    {
+        $this->assertEquals("verified", statusToJson(true)['status']);
+        $this->assertEquals("pending", statusToJson(false)['status']);
+        $this->assertEquals("error", statusToJson(null)['status']);
     }
 }

@@ -10,11 +10,28 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: darwinsgym_test
+          MYSQL_USER: test
+          MYSQL_PASSWORD: test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     env:
-      DB_HOST: ${{ secrets.DB_HOST }}
-      DB_USER: ${{ secrets.DB_USER }}
-      DB_PASS: ${{ secrets.DB_PASS }}
-      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_HOST: 127.0.0.1
+      DB_USER: test
+      DB_PASS: test
+      DB_NAME: darwinsgym_test
+
       BREVO_PASS: ${{ secrets.BREVO_PASS }}
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
@@ -29,7 +46,21 @@ jobs:
         extensions: mysqli, xdebug
 
     - name: Install dependencies
-      run: composer install
+      run: composer install --no-interaction --prefer-dist
+
+    - name: Wait for MySQL
+      run: |
+        until mysqladmin ping -h 127.0.0.1 -u test -ptest --silent; do
+          sleep 1
+        done
+
+    - name: Init DB schema
+      run: |
+        mysql -h 127.0.0.1 -u test -ptest darwinsgym_test < sql/schema.sql
+
+    - name: Seed test data
+      run: |
+        mysql -h 127.0.0.1 -u test -ptest darwinsgym_test < sql/seed_test.sql
 
     - name: Run PHPUnit
       run: ./vendor/bin/phpunit --coverage-clover coverage.xml tests/
@@ -39,4 +70,4 @@ jobs:
       with:
         projectKey: kirrril_DarwinsGym_API
         organization: kirrril
-        token: 686da240945df51c7df18c0554b69642d7ba4742
+        token: ${{ secrets.SONAR_TOKEN }}

@@ -2,7 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 require_once 'config.php';
-require_once 'vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -10,46 +10,62 @@ $dotenv->load();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
-$data = json_decode(file_get_contents("php://input"), true);
+if (PHP_SAPI === 'cli' && isset($GLOBALS['__TEST_INPUT__'])) {
+    $data = json_decode($GLOBALS['__TEST_INPUT__'], true);
+} else {
+    $data = json_decode(file_get_contents("php://input"), true);
+}
 
-$username = trim($data['username'] ?? '');
+$player_name = trim($data['player_name'] ?? '');
 $email    = trim($data['email'] ?? '');
 $password = $data['password'] ?? '';
 
-if (strlen($username) < 3 || strlen($username) > 20 || !preg_match('/^[a-zA-Z0-9_-]+$/', $username)) {
+if (strlen($player_name) < 3 || strlen($player_name) > 20 || !preg_match('/^[a-zA-Z0-9_-]+$/', $player_name)) {
     echo json_encode(["status" => "error", "message" => "Invalid username"]);
-    exit;
+
+    if (PHP_SAPI !== 'cli' || !isset($GLOBALS['__TEST_INPUT__'])) {
+        exit;
+    }
+    return;
 }
+
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     echo json_encode(["status" => "error", "message" => "Invalid email"]);
-    exit;
+
+    if (PHP_SAPI !== 'cli' || !isset($GLOBALS['__TEST_INPUT__'])) {
+        exit;
+    }
+    return;
 }
+
 if (strlen($password) < 8) {
     echo json_encode(["status" => "error", "message" => "Password too short"]);
-    exit;
+
+    if (PHP_SAPI !== 'cli' || !isset($GLOBALS['__TEST_INPUT__'])) {
+        exit;
+    }
+    return;
 }
 
 $stmt = $mysqli->prepare("SELECT id FROM players WHERE player_name = ? OR email = ?");
-$stmt->bind_param("ss", $username, $email);
+$stmt->bind_param("ss", $player_name, $email);
 $stmt->execute();
 if ($stmt->get_result()->num_rows > 0) {
     echo json_encode(["status" => "error", "message" => "Username or email already taken"]);
     $stmt->close();
-    exit;
+
+    if (PHP_SAPI !== 'cli' || !isset($GLOBALS['__TEST_INPUT__'])) {
+        exit;
+    }
+    return;
 }
 $stmt->close();
 
 $hash  = password_hash($password, PASSWORD_BCRYPT);
 $token = bin2hex(random_bytes(32));
 
-$stmt = $mysqli->prepare("INSERT INTO players (player_name, email, password_hash, verification_token) VALUES (?, ?, ?, ?)");
-$stmt->bind_param("ssss", $username, $email, $hash, $token);
-$stmt->execute();
-$player_id = $mysqli->insert_id;
-$stmt->close();
-
-$stmt = $mysqli->prepare("INSERT INTO scores (player_id, score) VALUES (?, 0)");
-$stmt->bind_param("i", $player_id);
+$stmt = $mysqli->prepare("INSERT INTO players (id, player_name, email, password_hash, verif_token, score) VALUES (UUID(), ?, ?, ?, ?, 0)");
+$stmt->bind_param("ssss", $player_name, $email, $hash, $token);
 $stmt->execute();
 $stmt->close();
 
@@ -67,8 +83,8 @@ try {
     $mail->setFrom('no-reply@darwinsgym.eu', "Darwin's Gym");
     $mail->addAddress($email);
     $mail->isHTML(true);
-    $mail->Subject = "Darwin's Gym – Verify your email";
-    $mail->Body    = "<h2>Welcome $username!</h2><p><a href='https://darwinsgym.eu/verify.php?token=$token'>Verify my email</a></p>";
+    $mail->Subject = "Darwin's Gym _ Verify your email";
+    $mail->Body    = "<h2>Welcome $player_name!</h2><p><a href='https://darwinsgym.eu/verify_mail.php?token=$token'>Verify my email</a></p>";
 
     $mail->send();
     error_log("BREVO MAIL ENVOYÉ À $email !");
@@ -77,5 +93,8 @@ try {
 }
 
 echo json_encode(["status" => "success", "message" => "Account created! Check your email."]);
-$mysqli->close();
-?>
+
+if (PHP_SAPI !== 'cli' || !isset($GLOBALS['__TEST_INPUT__'])) {
+    $mysqli->close();
+}
+
