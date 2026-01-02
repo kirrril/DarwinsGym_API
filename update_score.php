@@ -17,7 +17,7 @@ if (empty($player_name) || empty($new_score) || empty($token)) {
     exit;
 }
 
-$stmt = $mysqli->prepare("UPDATE players SET score = GREATEST(score, ?), score_updated_at = NOW() WHERE player_name = ? AND session_token = ? AND score < ?");
+$stmt = $mysqli->prepare("UPDATE players SET score = ?, score_updated_at = NOW() WHERE player_name = ? AND session_token = ? AND score < ?");
 $stmt->bind_param("issi", $new_score, $player_name, $token, $new_score);
 $stmt->execute();
 

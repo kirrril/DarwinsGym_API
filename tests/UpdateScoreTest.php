@@ -14,7 +14,7 @@ class UpdateScoreTest extends TestCase
 
         $GLOBALS['__TEST_INPUT__'] = json_encode([
             'player_name' => 'Monet',
-            'token' => '48640ee4e3d94d1feec331a15b0017c8451b3743d120d9504e1c088970e35245',
+            'token' => 'ea91e18581e57baa49119a3e42c12a61b7c9b900d9b15054d79cc5c3f95d4abb',
             'score' => 12
         ]);
 
