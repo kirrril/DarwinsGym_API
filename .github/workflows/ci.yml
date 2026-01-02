@@ -72,4 +72,4 @@ jobs:
           -Dsonar.projectKey=kirrril_DarwinsGym_API
           -Dsonar.organization=kirrril
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-          -Dsonar.php.coverage.reportPaths=coverage.xml
+          
