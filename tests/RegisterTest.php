@@ -64,6 +64,8 @@ class RegisterTest extends TestCase
     {
         require __DIR__ . '/../config.php';
 
+        $mysqli->begin_transaction();
+
         $GLOBALS['__TEST_INPUT__'] = json_encode([
             'player_name' => 'Monet',
             'email' => 'edgar@degas.fr',
@@ -78,11 +80,15 @@ class RegisterTest extends TestCase
 
         $this->assertEquals("error", $output->status);
         $this->assertEquals("Username or email already taken", $output->message);
+
+        $mysqli->rollback();
     }
 
     public function testEmailAlreadyTaken(): void
     {
         require __DIR__ . '/../config.php';
+
+        $mysqli->begin_transaction();
 
         $GLOBALS['__TEST_INPUT__'] = json_encode([
             'player_name' => 'Degas',
@@ -98,6 +104,8 @@ class RegisterTest extends TestCase
 
         $this->assertEquals("error", $output->status);
         $this->assertEquals("Username or email already taken", $output->message);
+
+        $mysqli->rollback();
     }
 
     public function testRegisteredAndEmailSent(): void
@@ -105,12 +113,12 @@ class RegisterTest extends TestCase
         require __DIR__ . '/../config.php';
         require __DIR__ . '/../vendor/autoload.php';
 
-        $mysqli->query("DELETE FROM players WHERE email = 'info@kirillukolov.com' OR player_name = 'Ukolov'");
+        $mysqli->query("DELETE FROM players WHERE email = 'kirillukolov22@gmail.com' OR player_name = 'Ukolov'");
 
         $GLOBALS['__TEST_INPUT__'] = json_encode([
             'player_name' => 'Ukolov',
-            'email' => 'info@kirillukolov.com',
-            'password' => 'Password7'
+            'email' => 'kirillukolov22@gmail.com',
+            'password' => 'Password11'
         ]);
 
         ob_start();
@@ -122,6 +130,6 @@ class RegisterTest extends TestCase
         $this->assertEquals("success", $output->status);
         $this->assertEquals("Account created! Check your email.", $output->message);
 
-        $mysqli->query("DELETE FROM players WHERE email = 'info@kirillukolov.com' OR player_name = 'Ukolov'");
+        $mysqli->query("DELETE FROM players WHERE email = 'kirillukolov22@gmail.com' OR player_name = 'Ukolov'");
     }
 }
