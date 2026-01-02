@@ -4,8 +4,10 @@ header("Content-Type: application/json");
 require_once 'config.php';
 require_once __DIR__ . '/vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+if (file_exists(__DIR__ . '/.env')) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
+}
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -97,4 +99,3 @@ echo json_encode(["status" => "success", "message" => "Account created! Check yo
 if (PHP_SAPI !== 'cli' || !isset($GLOBALS['__TEST_INPUT__'])) {
     $mysqli->close();
 }
-

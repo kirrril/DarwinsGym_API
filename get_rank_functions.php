@@ -22,19 +22,19 @@ function getScoreData(mysqli $mysqli, ?string $player_name, ?string $token): ?ar
 
 function getRank(mysqli $mysqli, array $score_data): int
 {
-    $rank_stmt = $mysqli->prepare("SELECT COUNT(*) + 1 AS rank FROM players WHERE score > ? OR (score = ? AND score_updated_at < ?)");
+    $rank_stmt = $mysqli->prepare("SELECT COUNT(*) + 1 AS player_rank FROM players WHERE score > ? OR (score = ? AND score_updated_at < ?)");
     $rank_stmt->bind_param("iis", $score_data['score'], $score_data['score'], $score_data['score_updated_at']);
     $rank_stmt->execute();
     $result = $rank_stmt->get_result();
-    $rank = (int)$result->fetch_assoc()['rank'];
+    $player_rank = (int)$result->fetch_assoc()['player_rank'];
     $rank_stmt->close();
-    return $rank;
+    return $player_rank;
 }
 
-function rankToJson(?int $rank): array
+function rankToJson(?int $player_rank): array
 {
-    if ($rank > 0) {
-        return ['status' => 'success', 'rank' => $rank];
+    if ($player_rank > 0) {
+        return ['status' => 'success', 'rank' => $player_rank];
     }
     else
     {

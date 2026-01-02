@@ -10,11 +10,11 @@ $player_name = trim($data['player_name'] ?? '');
 $token = trim($data['token'] ?? '');
 
 if (!validateNameAndToken($player_name, $token)) {
-    $rank = null;
+    $player_rank = null;
 } else {
     $score_data = getScoreData($mysqli, $player_name, $token);
-    $rank = $score_data ? getRank($mysqli, $score_data) : null;
+    $player_rank = $score_data ? getRank($mysqli, $score_data) : null;
 }
 $mysqli->close();
 
-echo json_encode(rankToJson($rank));
+echo json_encode(rankToJson($player_rank));
