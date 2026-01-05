@@ -6,9 +6,9 @@ INSERT INTO players (id, player_name, password_hash, email, email_verified, veri
 (UUID(), "Renoir", "$2y$10$FBVEl7lkPHJEQyhj9t78JuTonmI6Wj0Yd0CTT3mGrO3RGwvzu6WH2", "auguste@renoir.fr", 1, NULL, "da271bbe8d567be078c0418c862ef4d42bb3b3b9db468974f7661e90af310232", '2026-07-12 11:11:11', 85, '2025-11-01 07:55:03', 0);
 
 INSERT INTO rewards (id, date, reward_sent, player_id) VALUES
-(UUID(), '2025-10-31', 1, '3f9e5ef9-e3de-11f0-8804-00155d34f572'),
-(UUID(), '2025-11-30', 1, '7f3086de-e3de-11f0-8804-00155d34f572'),
-(UUID(), '2025-12-31', 1, '7f3086de-e3de-11f0-8804-00155d34f572'),
+(UUID(), '2025-10-31', 0, NULL),
+(UUID(), '2025-11-30', 0, NULL),
+(UUID(), '2025-12-31', 0, NULL),
 (UUID(), '2026-01-31', 0, NULL),
 (UUID(), '2026-02-28', 0, NULL),
 (UUID(), '2026-03-31', 0, NULL),
