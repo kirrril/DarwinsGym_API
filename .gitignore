@@ -2,5 +2,4 @@
 .env
 coverage.xml
 .phpunit.cache/
-RewardCronTest.php
 
