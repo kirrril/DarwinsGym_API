@@ -113,11 +113,11 @@ class RegisterTest extends TestCase
         require __DIR__ . '/../config.php';
         require __DIR__ . '/../vendor/autoload.php';
 
-        $mysqli->query("DELETE FROM players WHERE email = 'kirillukolov22@gmail.com' OR player_name = 'Ukolov'");
+        $mysqli->query("DELETE FROM players WHERE email = 'info@kirillukolov.com' OR player_name = 'Ukolov'");
 
         $GLOBALS['__TEST_INPUT__'] = json_encode([
             'player_name' => 'Ukolov',
-            'email' => 'kirillukolov22@gmail.com',
+            'email' => 'info@kirillukolov.com',
             'password' => 'Password11'
         ]);
 
@@ -130,6 +130,6 @@ class RegisterTest extends TestCase
         $this->assertEquals("success", $output->status);
         $this->assertEquals("Account created! Check your email.", $output->message);
 
-        $mysqli->query("DELETE FROM players WHERE email = 'kirillukolov22@gmail.com' OR player_name = 'Ukolov'");
+        $mysqli->query("DELETE FROM players WHERE email = 'info@kirillukolov.com' OR player_name = 'Ukolov'");
     }
 }
