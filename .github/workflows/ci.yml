@@ -63,5 +63,5 @@ jobs:
         mysql -h 127.0.0.1 -u test -ptest darwinsgym_test < sql/seed.sql
 
     - name: Run PHPUnit
-      run: ./vendor/bin/phpunit --coverage-clover coverage.xml tests/
+      run: ./vendor/bin/phpunit --coverage-clover coverage.xml
       
