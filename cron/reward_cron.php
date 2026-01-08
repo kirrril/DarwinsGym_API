@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/reward_cron_functions.php';
 
-$admin_email = "info@kirillukolov.com";
+$admin_email = "kirillukolov22@gmail.com";
 
 $status = "NOT_TODAY";
 
